@@ -194,11 +194,17 @@ func VimExecutable() (string, error) {
 	return exec.LookPath(exeName)
 }
 
-// VimDir returns the following fullpath:
+// VimDir returns the .vim directory.
+// If VOLT_VIM_DIR environment variable is set, use it.
+// Otherwise return following fullpath:
 //   Windows: $HOME/vimfiles
 //   Other: $HOME/.vim
 func VimDir() string {
-	vimdir := ".vim"
+	vimdir := os.Getenv("VOLT_VIM_DIR")
+	if vimdir != "" {
+		return vimdir
+	}
+	vimdir = ".vim"
 	if runtime.GOOS == "windows" {
 		vimdir = "vimfiles"
 	}
